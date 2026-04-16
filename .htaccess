@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# redirect index.html to root
+RewriteRule ^index\.html$ / [R=301,L]
+
+# redirect .html URLs to clean URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)\.html$ https://garcehorne.com/$1 [R=301,L]
+
+# serve .html file for clean URLs internally
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ /$1.html [L]
