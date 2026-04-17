@@ -1,13 +1,31 @@
 RewriteEngine On
 
-# redirect index.html to root
+# Canonicalize app roots to no trailing slash
+RewriteCond %{THE_REQUEST} \s/+bubo/\s [NC]
+RewriteRule ^bubo/$ /bubo [R=301,L]
+RewriteCond %{THE_REQUEST} \s/+focus/\s [NC]
+RewriteRule ^focus/$ /focus [R=301,L]
+
+# Hide /public URLs for bubo
+RewriteRule ^bubo/public/?$ /bubo [R=301,L]
+RewriteRule ^bubo/public/index\.html$ /bubo [R=301,L]
+RewriteRule ^bubo/public/style\.css$ /bubo/style.css [R=301,L]
+
+# Serve clean app routes from /public internally for bubo
+RewriteRule ^bubo$ /bubo/public/index.html [L]
+RewriteRule ^bubo/style\.css$ /bubo/public/style.css [L]
+
+# Serve focus index.html for clean /focus route
+RewriteRule ^focus$ /focus/index.html [L]
+
+# Redirect index.html to root
 RewriteRule ^index\.html$ / [R=301,L]
 
-# redirect .html URLs to clean URLs
+# Redirect .html URLs to clean URLs
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)\.html$ https://garcehorne.com/$1 [R=301,L]
 
-# serve .html file for clean URLs internally
+# Serve .html file for clean URLs internally
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
